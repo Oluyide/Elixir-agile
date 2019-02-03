@@ -1,0 +1,58 @@
+
+<h3>Auction details</h3>
+<br/>
+
+<p> Description: <%= @auction.descriptions %></p>
+<hr/>
+<p><%= @auction.price %></p>
+<hr/>
+<p><%= @auction.closing_date %></p>
+
+<div class="col-lg-6">
+<%= form_for @conn, auction_path(@conn, :create_bid), [as: :bid], fn f -> %>
+<div class="form-group">
+    <%= text_input f, :amount, class: "form-control" %>
+</div>
+<div class="form-group">
+    <%= hidden_input f, :item_price, id: "item", value: @auction.price %>
+</div>
+<div class="form-group">
+    <%= hidden_input f, :item_id, id: "itemid", value: @auction.id %>
+</div>
+<div class="form-group">
+    <%= hidden_input f, :item_name, id: "item_name", value: @auction.descriptions %>
+</div>
+<div class="form-group">
+   <%= hidden_input f, :biddingTime, id: "time", value: DateTime.utc_now() %>
+</div>
+<div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+</div>
+
+<% end %>
+</div>
+
+<div id="bidhistory">
+<Bid><Bid>
+</div>
+<script>
+
+
+  export default {
+    data () {
+      return {
+        bids: []
+      }
+    },
+    methods: {
+      createPost() {
+       axios.get('http://localhost:4000/api/bid_history?itemid='+@auction.id {
+       }).then((response) => {this.bids = response.data})
+       .catch((e) => {
+    console.error(e)
+  })
+      }
+    }
+  }
+</script>
+
